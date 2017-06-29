@@ -27,22 +27,25 @@ def TimeSeries_ArgMax(A,t):
     return A.rolling(t).apply(np.argmax)
 
 def POWER(A,t):
-    pass
+    return A**t
 
 def STD(A,t):
     return A.rolling(t).std()
 
 def CORR(A,B,t):
-    pass
+    return A.rolling(t).corr(other = B)
 
+
+#if t==0 return A
 def DELTA(A,t):
-    return A - A.rolling(t).apply(np.choose(0))
+    return A - A.shift(t)
+
 
 def SUM(A,t):
     return A.rolling(t).sum()
 
-def ABS(A,t):
-    pass
+def ABS(A):
+    return abs(A)
 
 def MEAN(A,t):
     return A.rolling(t).mean()
@@ -58,11 +61,10 @@ def TimeSeries_MAX(A,t):
 
 #----------------------
 def SIGN(A):
-    pass
-    return A.sign()
+    return A.apply(np.sign)
 
 def COV(A,B,t):
-    pass
+    return A.rolling(t).cov(other = B)
 
 
 
@@ -80,9 +82,9 @@ if __name__ == "__main__":
     with open('closePrice.pkl', 'rb') as file2:
         B = pickle.load(file2)
 
-    C = DELTA(A,10)
+    C = COV(A,B,10)
     #C = TimeSeries_MIN(A,10)
-    D = MEAN(A,2)
+    #D = MEAN(A,2)
 
     print C
     #print D
