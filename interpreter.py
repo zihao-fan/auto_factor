@@ -4,15 +4,15 @@ import function
 import pickle
 
 f = open('openPrice.pkl', 'rb')
-A = pickle.load(f)
-# f = open('closePrice.pkl', 'rb')
-# B = pickle.load(f)
+OPEN = pickle.load(f)
+f = open('closePrice.pkl', 'rb')
+CLOSE = pickle.load(f)
 
 terminal_dict = {'OPEN', 'VOLUME', 'CLOSE', 'VWAP', 't'}
 function_dict = {'MULTIPLY'}
-operator_num_dict = {'EQUAL' : 1,
-                     'MULTIPLY' : 2
-                    }
+operands_dict = {'OPEN': OPEN,
+                 'CLOSE': CLOSE
+}
 
 class Node(object):
     def __init__(self, data, is_terminal):
@@ -56,10 +56,11 @@ def is_terminal(formula):
     return False
 
 def compute_node(node):
-    # break
     if node.is_terminal:
-        # TODO: return the real dataframe
-        return node.data
+        if node.data in operands_dict:
+            return operands_dict[node.data]
+        else:
+            return int(node.data)
     else:
         slicing_point = find_slicing_point(node.data)
         current_operator = node.data[0:slicing_point[0]].strip()
@@ -69,12 +70,12 @@ def compute_node(node):
         results = []
         for substr in operands_list:
             results.append(compute_node(Node(substr, is_terminal(substr))))
-        # TODO: call the function and pass the params
-        print 'Compute', current_operator, results
+        print 'Compute', current_operator
+        return getattr(function, current_operator)(*results)
 
-def compute_formula(formula, data_frames):
+def compute_formula(formula):
     root_node = Node(formula[1:-1], is_terminal(formula[1:-1]))
     compute_node(root_node)
 
 if __name__ == '__main__':
-    compute_formula('(MULTIPLY(-1, CORR(RANK(OPEN), RANK(VOLUME), t)))', A)
+    compute_formula('(MULTIPLY(-1, CORR(RANK(OPEN), RANK(CLOSE), 5)))')
