@@ -77,7 +77,7 @@ def compute_formula(formula, alpha_id):
     print '[Computing] alpha', alpha_id
     result = compute_node(formula[1:-1], is_terminal(formula[1:-1]))
     alpha_id = str(alpha_id)
-    output_path = os.path.join(root_path, 'data', 'alpha' + alpha_id + '.pickle')
+    output_path = os.path.join(root_path, 'data', 'alpha' + alpha_id + '.pkl')
     result.to_pickle(output_path)
     print '[Done] alpha' + alpha_id, 'computed, output to', output_path
 
