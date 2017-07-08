@@ -3,20 +3,46 @@ import pandas as pd
 import function
 import pickle
 import os
+import json
 from config import root_path
 
-f = open('../data/openPrice.pkl', 'rb')
-OPEN = pickle.load(f)
-f = open('../data/closePrice.pkl', 'rb')
-CLOSE = pickle.load(f)
-t = 5
+def load_data(data_path):
+    f = open(os.path.join(data_path, 'close.pkl'), 'rb')
+    CLOSE = pickle.load(f)
+    f = open(os.path.join(data_path, 'high.pkl'), 'rb')
+    HIGH = pickle.load(f)
+    f = open(os.path.join(data_path, 'low.pkl'), 'rb')
+    LOW = pickle.load(f)
+    f = open(os.path.join(data_path, 'marketValue.pkl'), 'rb')
+    MKT_VALUE = pickle.load(f)
+    f = open(os.path.join(data_path, 'open.pkl'), 'rb')
+    OPEN = pickle.load(f)
+    f = open(os.path.join(data_path, 'preClose.pkl'), 'rb')
+    PRE_CLOSE = pickle.load(f)
+    f = open(os.path.join(data_path, 'return.pkl'), 'rb')
+    RETURNS = pickle.load(f)
+    f = open(os.path.join(data_path, 'turnoverValue.pkl'), 'rb')
+    TURN_OVER_VALUE = pickle.load(f)
+    f = open(os.path.join(data_path, 'volume.pkl'), 'rb')
+    VOLUME = pickle.load(f)
+    f = open(os.path.join(data_path, 'vwap.pkl'), 'rb')
+    VWAP = pickle.load(f)
+    return OPEN, CLOSE, HIGH, LOW, MKT_VALUE, PRE_CLOSE, RETURNS, TURN_OVER_VALUE, VOLUME, VWAP
+
+OPEN, CLOSE, HIGH, LOW, MKT_VALUE, PRE_CLOSE, RETURNS, TURN_OVER_VALUE, VOLUME, VWAP = load_data(os.path.join(root_path, 'data'))
 
 # add termial name for each data frame
-terminal_set = {'OPEN', 'CLOSE', 'HIGH', 'LOW', 'VWAP', 'RETURNS', 'VOLUME', 't'}
+terminal_set = {'OPEN', 'CLOSE', 'HIGH', 'LOW', 'VWAP', 'RETURNS', 'VOLUME', 't', 'k'}
 # add key-value pair for each terminal
 operands_dict = {'OPEN': OPEN,
                  'CLOSE': CLOSE,
-                 't': t
+                 'HIGH': HIGH,
+                 'LOW': LOW,
+                 'VWAP': VWAP,
+                 'RETURNS': RETURNS,
+                 'VOLUME': VOLUME,
+                 't': 5,
+                 'k': 1
 }
 
 def find_slicing_point(formula):
@@ -73,7 +99,7 @@ def compute_node(data, isterminal):
         # print 'Compute', current_operator
         return getattr(function, current_operator)(*results)
 
-def compute_formula(formula, alpha_id):
+def compute_formula(alpha_id, formula):
     print '[Computing] alpha', alpha_id
     result = compute_node(formula[1:-1], is_terminal(formula[1:-1]))
     alpha_id = str(alpha_id)
@@ -81,5 +107,14 @@ def compute_formula(formula, alpha_id):
     result.to_pickle(output_path)
     print '[Done] alpha' + alpha_id, 'computed, output to', output_path
 
+def load_signal(file_path):
+    with open(file_path, 'r') as f:
+        signal_list = json.load(f)
+        signal_list = [signal for signal in signal_list if signal[1] != 'pass']
+        return signal_list
+
 if __name__ == '__main__':
-    compute_formula('(MULTIPLY(-1, CORR(RANK(OPEN), RANK(CLOSE), t)))', '001')
+    # compute_formula('001', '(MULTIPLY(-1, CORR(RANK(OPEN), RANK(CLOSE), t)))')
+    signal_list = load_signal(os.path.join(root_path, 'src', 'signal.json'))
+    for signal in signal_list:
+        compute_formula(signal[0], signal[1])

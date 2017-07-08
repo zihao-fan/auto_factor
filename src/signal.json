@@ -1,0 +1,5 @@
+[
+["001", "pass"],
+["002", "pass"],
+["003", "(MULTIPLY(-1, CORR(RANK(OPEN), RANK(CLOSE), t)))"]
+]
