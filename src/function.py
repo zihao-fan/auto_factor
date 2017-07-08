@@ -50,8 +50,12 @@ def ABS(A):
 def MEAN(A,t):
     return A.rolling(t).mean()
 
-def IF(A,B,C):
-    pass
+
+def IFbelow0(A, B, C):
+    A1 = A.applymap(lambda x: 1 if x < 0 else 0)
+    A2 = A.applymap(lambda x: 0 if x < 0 else 1)
+
+    return A1 * B + A2 * C
 
 def TimeSeries_MIN(A,t):
     return A.rolling(t).min()
