@@ -76,9 +76,9 @@ def is_terminal(formula):
     except ValueError:
         is_digit = False
     if is_digit or formula in terminal_set:
-        # print 'is terminal', formula
+        print 'is terminal', formula
         return True
-    # print 'not terminal', formula
+    print 'not terminal', formula
     return False
 
 def compute_node(data, isterminal):
@@ -96,7 +96,7 @@ def compute_node(data, isterminal):
         results = []
         for substr in operands_list:
             results.append(compute_node(substr, is_terminal(substr)))
-        print 'Compute', current_operator
+        print 'Computing', current_operator
         return getattr(function, current_operator)(*results)
 
 def compute_formula(alpha_id, formula):
