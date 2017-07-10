@@ -4,17 +4,10 @@
 import pandas as pd
 import numpy as np
 import pickle
+import datetime
 
 def ADD(A,B):
     return A+B
-
-def LOG(A):
-    pass
-
-def REF(A,t):
-    pass
-
-
 
 def MINUS(A,B):
     return A-B
@@ -79,6 +72,30 @@ def COV(A,B,t):
     return A.rolling(t).cov(other = B)
 
 
+def LOG(A):
+    return log(abs(A))
+
+def REF(A,t):
+    return A.shift(t)
+
+def myrank(array):
+    return pd.Series(array).rank(ascending=True)[0]
+
+#注：此函数执行耗时较长,约5s
+def TimeSeries_RANK(A,t):
+    return A.rolling(t).apply(lambda x: x.argsort().argsort()[0])
+
+def EMA(A,t):
+    return A.ewm(span=t).mean()
+
+def COUNT(A,t):
+    pass
+
+def AND(A,B):
+    return (A.astype('bool')) & (B.astype('bool'))
+
+def OR(A,B):
+    return (A.astype('bool')) | (B.astype('bool'))
 
 
 
@@ -94,9 +111,14 @@ if __name__ == "__main__":
     with open('closePrice.pkl', 'rb') as file2:
         B = pickle.load(file2)
 
-    C = COV(A,B,10)
+    #C = COV(A,B,10)
     #C = TimeSeries_MIN(A,10)
     #D = MEAN(A,2)
 
-    print C
+    a = datetime.datetime.now()
+    C = AND(A,B)
+    b = datetime.datetime.now()
+    print b-a
+    #print A
+    #print C
     #print D
