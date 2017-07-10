@@ -96,23 +96,23 @@ def compute_node(data, isterminal):
         results = []
         for substr in operands_list:
             results.append(compute_node(substr, is_terminal(substr)))
-        # print 'Compute', current_operator
+        print 'Compute', current_operator
         return getattr(function, current_operator)(*results)
 
 def compute_formula(alpha_id, formula):
     output_path = os.path.join(root_path, 'data', 'alpha' + alpha_id + '.pkl')
     if os.path.exists(output_path):
-        print '[Skip]', alpha_id 'already exists.'
+        print '[Skip]', alpha_id, 'already exists.\n'
     else:   
         try:
             print '[Computing] alpha', alpha_id
             result = compute_node(formula[1:-1], is_terminal(formula[1:-1]))
             alpha_id = str(alpha_id)
             result.to_pickle(output_path)
-            print '[Done] alpha' + alpha_id, 'computed, output to', output_path
-        except e:
+            print '[Done] alpha' + alpha_id, 'computed, output to', output_path, '\n'
+        except Exception, e:
             print e
-            print '[Exception]', alpha_id, 'fail to compute.'
+            print '[Exception]', alpha_id, 'fail to compute.\n'
 
 def load_signal(file_path):
     with open(file_path, 'r') as f:
