@@ -73,13 +73,11 @@ def COV(A,B,t):
 
 
 def LOG(A):
-    return log(abs(A))
+    return abs(A).applymap(np.log)
 
 def REF(A,t):
     return A.shift(t)
 
-def myrank(array):
-    return pd.Series(array).rank(ascending=True)[0]
 
 #注：此函数执行耗时较长,约5s
 def TimeSeries_RANK(A,t):
@@ -116,9 +114,11 @@ if __name__ == "__main__":
     #D = MEAN(A,2)
 
     a = datetime.datetime.now()
-    C = AND(A,B)
+    C = LOG(A)
     b = datetime.datetime.now()
+
+
     print b-a
     #print A
-    #print C
+    print C
     #print D
