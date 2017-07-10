@@ -9,7 +9,7 @@ def ADD(A,B):
     return A+B
 
 def LOG(A):
-
+    pass
 
 def REF(A,t):
     pass
