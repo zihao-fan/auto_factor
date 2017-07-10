@@ -8,6 +8,14 @@ import pickle
 def ADD(A,B):
     return A+B
 
+def LOG(A):
+    pass
+
+def REF(A,t):
+    pass
+
+
+
 def MINUS(A,B):
     return A-B
 
@@ -15,7 +23,7 @@ def MULTIPLY(A,B):
     return A*B
 
 #return A/B
-def DEVIDE(A,B):
+def DIVIDE(A,B):
     return A/B
 
 #e.g. : A = [1,4,NaN] return [3,2,1]
