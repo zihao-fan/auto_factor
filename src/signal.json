@@ -1,5 +1,5 @@
 [
-["001", "pass"],
-["002", "pass"],
+["001", "(MINUS(RANK(TimeSeries_ArgMAX(POWER((IFbelow0(RETURNS, STD(RETURNS, t), CLOSE)), t), t)), 0.5))"],
+["002", "(MULTIPLY(-1, CORR(RANK(DELTA(LOG(VOLUME), t)), RANK(DIVIDE(MINUS(CLOSE, OPEN), OPEN)) t)))"],
 ["003", "(MULTIPLY(-1, CORR(RANK(OPEN), RANK(CLOSE), t)))"]
 ]
