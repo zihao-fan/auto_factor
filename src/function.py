@@ -96,7 +96,20 @@ def OR(A,B):
     return (A.astype('bool')) | (B.astype('bool'))
 
 
+def MAX(A,B):
+    pass
 
+def IF(A,B,C):
+    pass
+
+def EQUAL(A,B):
+    pass
+
+def LESS(A,B):
+    pass
+
+def AVEDEV(A,t):
+    pass
 
 
 
