@@ -105,10 +105,14 @@ def IF(A,B,C):
 def EQUAL(A,B):
     pass
 
+# 前面小于后面，返回TRUE
 def LESS(A,B):
     pass
 
 def AVEDEV(A,t):
+    pass
+
+def SMA(A,t,k):
     pass
 
 
