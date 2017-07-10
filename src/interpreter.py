@@ -42,7 +42,7 @@ operands_dict = {'OPEN': OPEN,
                  'RETURNS': RETURNS,
                  'VOLUME': VOLUME,
                  't': 5,
-                 'k': 1
+                 'k': 2
 }
 
 def find_slicing_point(formula):
@@ -100,12 +100,19 @@ def compute_node(data, isterminal):
         return getattr(function, current_operator)(*results)
 
 def compute_formula(alpha_id, formula):
-    print '[Computing] alpha', alpha_id
-    result = compute_node(formula[1:-1], is_terminal(formula[1:-1]))
-    alpha_id = str(alpha_id)
     output_path = os.path.join(root_path, 'data', 'alpha' + alpha_id + '.pkl')
-    result.to_pickle(output_path)
-    print '[Done] alpha' + alpha_id, 'computed, output to', output_path
+    if os.path.exists(output_path):
+        print '[Skip]', alpha_id 'already exists.'
+    else:   
+        try:
+            print '[Computing] alpha', alpha_id
+            result = compute_node(formula[1:-1], is_terminal(formula[1:-1]))
+            alpha_id = str(alpha_id)
+            result.to_pickle(output_path)
+            print '[Done] alpha' + alpha_id, 'computed, output to', output_path
+        except e:
+            print e
+            print '[Exception]', alpha_id, 'fail to compute.'
 
 def load_signal(file_path):
     with open(file_path, 'r') as f:
