@@ -97,23 +97,37 @@ def OR(A,B):
 
 
 def MAX(A,B):
-    pass
+    C = A - B
+    C1 = C.applymap(lambda x:0 if x < 0 else 1)
+    C2 = C.applymap(lambda x: 1 if x < 0 else 0)
+    return C1*A + C2*B
 
+#A为bool类型的矩阵，如果真，选B，否则选C
 def IF(A,B,C):
-    pass
+    A1 = A.astype('bool').astype('int')
+    A2 = 1 - A1
+    return A1*B + A2*C
+
 
 def EQUAL(A,B):
-    pass
+    return (1-((A-B).astype('bool'))).astype('bool')
 
 # 前面小于后面，返回TRUE
 def LESS(A,B):
-    pass
+    C = A - B
+    return C.applymap(lambda x:True if x<0 else False)
 
 def AVEDEV(A,t):
-    pass
+    B = A.rolling(t).mean()
+    return ABS(A - B).rolling(t).mean()
+
 
 def SMA(A,t,k):
-    pass
+    return A.ewm(alpha=k/(t+1)).mean()
+
+#A是逻辑运算矩阵，计算k个日期内有几个1
+def COUNT(A,t):
+    return A.astype('bool').astype('int').rolling(t).sum()
 
 
 
@@ -131,7 +145,7 @@ if __name__ == "__main__":
     #D = MEAN(A,2)
 
     a = datetime.datetime.now()
-    C = LOG(A)
+    C = COUNT(A,5)
     b = datetime.datetime.now()
 
 
