@@ -27,23 +27,20 @@ def load_data(data_path):
     VOLUME = pickle.load(f)
     f = open(os.path.join(data_path, 'vwap.pkl'), 'rb')
     VWAP = pickle.load(f)
-    return OPEN, CLOSE, HIGH, LOW, MKT_VALUE, PRE_CLOSE, RETURNS, TURN_OVER_VALUE, VOLUME, VWAP
+    # add key-value pair for each terminal
+    terminal_dict = {'OPEN': OPEN,
+                     'CLOSE': CLOSE,
+                     'HIGH': HIGH,
+                     'LOW': LOW,
+                     'VWAP': VWAP,
+                     'RETURNS': RETURNS,
+                     'VOLUME': VOLUME,
+                     't': 5,
+                     'k': 2
+    }
+    return terminal_dict
 
-OPEN, CLOSE, HIGH, LOW, MKT_VALUE, PRE_CLOSE, RETURNS, TURN_OVER_VALUE, VOLUME, VWAP = load_data(os.path.join(root_path, 'data'))
-
-# add termial name for each data frame
-terminal_set = {'OPEN', 'CLOSE', 'HIGH', 'LOW', 'VWAP', 'RETURNS', 'VOLUME', 't', 'k'}
-# add key-value pair for each terminal
-operands_dict = {'OPEN': OPEN,
-                 'CLOSE': CLOSE,
-                 'HIGH': HIGH,
-                 'LOW': LOW,
-                 'VWAP': VWAP,
-                 'RETURNS': RETURNS,
-                 'VOLUME': VOLUME,
-                 't': 5,
-                 'k': 2
-}
+terminal_dict = load_data(os.path.join(root_path, 'data'))
 
 def find_slicing_point(formula):
     length = len(formula)
@@ -75,7 +72,7 @@ def is_terminal(formula):
         is_digit = True
     except ValueError:
         is_digit = False
-    if is_digit or formula in terminal_set:
+    if is_digit or formula in terminal_dict:
         print 'is terminal', formula
         return True
     print 'not terminal', formula
@@ -83,8 +80,14 @@ def is_terminal(formula):
 
 def compute_node(data, isterminal):
     if isterminal:
-        if data in operands_dict:
-            return operands_dict[data]
+        if data in terminal_dict:
+            terminal_data = terminal_dict[data]
+            if isinstance(terminal_data, str):
+                the_path = terminal_data
+                f = open(terminal_data, 'rb')
+                terminal_data = pickle.load(f)
+                print 'Loaded', the_path, 'from disk'
+            return terminal_data
         else:
             return float(data)
     else:
@@ -96,6 +99,10 @@ def compute_node(data, isterminal):
         results = []
         for substr in operands_list:
             results.append(compute_node(substr, is_terminal(substr)))
+        if len(current_operator) == 0:
+            print 'Yet another pair of parenthese'
+            assert len(results) == 1, 'Result length not == 1'
+            return results[0]
         print 'Computing', current_operator
         return getattr(function, current_operator)(*results)
 
@@ -109,6 +116,12 @@ def compute_formula(alpha_id, formula):
             result = compute_node(formula[1:-1], is_terminal(formula[1:-1]))
             alpha_id = str(alpha_id)
             result.to_pickle(output_path)
+            name_list = alpha_id.split('_')
+            if len(name_list) > 1:
+                name = name_list[1]
+                global terminal_dict
+                terminal_dict[name] = output_path
+                print '[UPDATE]', name, 'add to terminal_dict'
             print '[Done] alpha' + alpha_id, 'computed, output to', output_path, '\n'
         except Exception, e:
             print e
