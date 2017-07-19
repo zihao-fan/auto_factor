@@ -113,7 +113,7 @@ def compute_formula(alpha_id, formula):
     else:   
         try:
             print '[Computing] alpha', alpha_id
-            result = compute_node(formula[1:-1], is_terminal(formula[1:-1]))
+            result = compute_node(formula, is_terminal(formula))
             alpha_id = str(alpha_id)
             result.to_pickle(output_path)
             name_list = alpha_id.split('_')
