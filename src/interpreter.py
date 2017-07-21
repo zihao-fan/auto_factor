@@ -6,6 +6,12 @@ import os
 import json
 from config import root_path
 
+'''
+,
+["084_DIF", "MINUS(CLOSE, IF(LESS(LC, CLOSE), MIN(LOW, LC), MAX(HIGH, LC)))"],
+["084_ACD", "SUM(IF(EQUAL(LC, CLOSE), 0, DIF), 20)"]
+'''
+
 def load_data(data_path):
     f = open(os.path.join(data_path, 'close.pkl'), 'rb')
     CLOSE = pickle.load(f)
@@ -41,6 +47,13 @@ def load_data(data_path):
     return terminal_dict
 
 terminal_dict = load_data(os.path.join(root_path, 'data'))
+part_terminal_dict = {}
+part_terminal_dict_path = os.path.join(root_path, 'part_terminal_dict.json')
+if os.path.exists(part_terminal_dict_path):
+    with open(part_terminal_dict_path, 'r') as f:
+        part_terminal_dict = json.load(f)
+        terminal_dict.update(part_terminal_dict)
+        print '[Loaded] terminal dict from,', part_terminal_dict_path
 
 def find_slicing_point(formula):
     length = len(formula)
@@ -82,7 +95,7 @@ def compute_node(data, isterminal):
     if isterminal:
         if data in terminal_dict:
             terminal_data = terminal_dict[data]
-            if isinstance(terminal_data, str):
+            if isinstance(terminal_data, unicode):
                 the_path = terminal_data
                 f = open(terminal_data, 'rb')
                 terminal_data = pickle.load(f)
@@ -120,8 +133,13 @@ def compute_formula(alpha_id, formula):
             if len(name_list) > 1:
                 name = name_list[1]
                 global terminal_dict
+                global part_terminal_dict
                 terminal_dict[name] = output_path
+                part_terminal_dict[name] = output_path
                 print '[UPDATE]', name, 'add to terminal_dict'
+                with open(part_terminal_dict_path, 'w') as f:
+                    json.dump(part_terminal_dict, f)
+                    print '[Saved] terminal dict to', part_terminal_dict_path
             print '[Done] alpha' + alpha_id, 'computed, output to', output_path, '\n'
         except Exception, e:
             print e
