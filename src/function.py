@@ -138,13 +138,18 @@ def COUNT(A,t):
 def SQRT(A):
     return A.applymap(lambda x: 0 if x < 0 else np.sqrt(x))
 
+def SCALE(A):
+    return (A-A.mean())/A.std()
+
+def DECAY_LINEAR(A,t):
+    return A.rolling(int(t)).mean()
 
 
 
 
 
 if __name__ == "__main__":
-    with open('openPrice.pkl', 'rb') as file2:
+    with open('return.pkl', 'rb') as file2:
         A = pickle.load(file2)
 
     #with open('closePrice.pkl', 'rb') as file2:
@@ -154,12 +159,13 @@ if __name__ == "__main__":
     #C = TimeSeries_MIN(A,10)
     #D = MEAN(A,2)
 
-    a = datetime.datetime.now()
-    C = SQRT(A)
-    b = datetime.datetime.now()
+    #a = datetime.datetime.now()
+    #C = SQRT(A)
+    #b = datetime.datetime.now()
 
+    C = SCALE(A)
 
-    print b-a
+    #print b-a
     #print A
     print C
     #print D
