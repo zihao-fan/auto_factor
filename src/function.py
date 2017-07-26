@@ -144,6 +144,9 @@ def SCALE(A):
 def DECAY_LINEAR(A,t):
     return A.rolling(int(t)).mean()
 
+def TimeSeries_ArgMin(A,t):
+    return A.rolling(int(t)).apply(np.argmin)
+
 
 
 
