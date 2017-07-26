@@ -79,7 +79,7 @@
 ["078", "MULTIPLY(POWER(RANK(MINUS(VWAP, TimeSeries_MIN(VWAP, t))), TimeSeries_RANK(CORR(TimeSeries_RANK(VWAP, t), TimeSeries_RANK(MEAN(VOLUME, t), t), t), t)), -1)"],
 ["079", "LESS(RANK(MINUS(OPEN, TimeSeries_MIN(OPEN, t))), TimeSeries_RANK(POWER(RANK(CORR(SUM(DIVIDE(ADD(HIGH, LOW), t), t), SUM(MEAN(VOLUME, t), t), t)), k), t))"],
 ["080", "MULTIPLY(MAX(TimeSeries_RANK(DECAY_LINEAR(CORR(RANK(VWAP), RANK(VOLUME), t), t), t), TimeSeries_RANK(DECAY_LINEAR(TimeSeries_ArgMax(CORR(TimeSeries_RANK(CLOSE, t), TimeSeries_RANK(MEAN(VOLUME, t), t), t), t), t), t)), -1)"],
-["081", "pass"],
+["081", "MINUS(RANK(DECAY_LINEAR(CORR(VWAP, SUM(MEAN(VOLUME, t), t), t), t)), RANK(DECAY_LINEAR(TimeSeries_RANK(TimeSeries_ArgMin(CORR(RANK(OPEN), RANK(MEAN(VOLUME, t)), t), t), t), t)))"],
 ["082", "MULTIPLY(LESS(RANK(CORR(SUM(DIVIDE(ADD(HIGH, LOW), t), t), SUM(MEAN(VOLUME, t), t), t)), RANK(CORR(LOW, VOLUME, t))), -1)"],
 ["083", "DIVIDE(MINUS(CLOSE, OPEN), ADD(MINUS(HIGH, LOW), 0.001))"],
 ["084_LC", "REF(CLOSE, 1)"],
