@@ -1,7 +1,5 @@
 # auto_factor
 
-## interpreter
-
 ## Basic Functions
 formula name: function_name(params)
 
